@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
                 teamA.setText(Integer.toString(scoreA));
             } else {
                 scoreA = scoreA - increment;
-                if(scoreA==0)
+                if(scoreA < 0)
                     teamA.setText("0");
                 else
                 teamA.setText(Integer.toString(scoreA));
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
             } else {
 
                 scoreB = scoreB - increment;
-                if(scoreB==0)
+                if(scoreB < 0)
                     teamB.setText("0");
                 else
                 teamB.setText(Integer.toString(scoreB));
