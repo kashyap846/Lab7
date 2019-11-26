@@ -1,10 +1,14 @@
 package ca.davidpellegrini.scorekeepersolution;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -15,6 +19,10 @@ import android.view.View.OnClickListener;
 
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.view.View.OnKeyListener;
+import android.widget.Toast;
+
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 
 public class MainActivity extends AppCompatActivity  implements OnEditorActionListener, OnClickListener,
         OnCheckedChangeListener, OnKeyListener{
@@ -22,7 +30,6 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
     private TextView teamA,teamB;
     private Button teamAPlus,teamAMinus,teamBPlus,teamBMinus;
     private RadioGroup incrementBy;
-    private String teamAScore,teamBScore;
     private RadioButton inc1, inc5, inc10;
     private String scoreAString = "";
     private String scoreBString = "";
@@ -31,7 +38,8 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
     private String incOrDecStringA = "";
     private String incOrDecStringB = "";
 
-
+    private SharedPreferences savedValues,prefs;
+    private boolean rememberUserChnages =true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +61,11 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
 
         inc1 = (RadioButton) findViewById(R.id.noRoundingRadioButton);
         inc5 = (RadioButton) findViewById(R.id.noRoundingRadioButton5);
-        inc10 = (RadioButton) findViewById(R.id.noRoundingRadioButton10);
+        inc10=  (RadioButton) findViewById(R.id.noRoundingRadioButton10);
+
+        savedValues = getSharedPreferences("SavedValues", MODE_PRIVATE);
+        PreferenceManager.setDefaultValues(this,R.xml.preferences,false);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     public void calculateAndDisplayA(){
@@ -76,13 +88,16 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
 
             if (incOrDecStringA == "increment") {
                 scoreA = scoreA + increment;
+
                 teamA.setText(Integer.toString(scoreA));
-            } else {
+                incOrDecStringA="";
+            } else if(incOrDecStringA == "decrement") {
                 scoreA = scoreA - increment;
                 if(scoreA < 0)
                     teamA.setText("0");
                 else
                 teamA.setText(Integer.toString(scoreA));
+                incOrDecStringA="";
             }
 
 
@@ -107,13 +122,15 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
             if (incOrDecStringB == "increment") {
                 scoreB = scoreB + increment;
                 teamB.setText(Integer.toString(scoreB));
-            } else {
+                incOrDecStringB = "";
+            } else if(incOrDecStringB == "decrement") {
 
                 scoreB = scoreB - increment;
                 if(scoreB < 0)
                     teamB.setText("0");
                 else
                 teamB.setText(Integer.toString(scoreB));
+                incOrDecStringB="";
             }
 
     }
@@ -174,5 +191,95 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         return false;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(
+                R.menu.activity_menu, menu
+        );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                startActivity(new Intent(
+                        getApplicationContext(), SettingsActivity.class
+                ));
+                return true;
+            case R.id.menu_about:
+                Toast.makeText(this, R.string.menu_about, Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Editor editor = savedValues.edit();
+
+        rememberUserChnages= prefs.getBoolean("pref_changes_saved",true);
+        if(rememberUserChnages) {
+            editor.putString("scoreAString", scoreAString);
+            editor.putString("scoreBString", scoreBString);
+            editor.putInt("increment", increment);
+        }
+        editor.commit();
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Editor editor = savedValues.edit();
+
+        rememberUserChnages= prefs.getBoolean("pref_changes_saved",true);
+        if(rememberUserChnages) {
+            editor.putString("scoreAString", scoreAString);
+            editor.putString("scoreBString", scoreBString);
+            editor.putInt("increment", increment);
+        }
+        editor.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+       rememberUserChnages= prefs.getBoolean("pref_changes_saved",true);
+        if(rememberUserChnages) {
+            String scoreAStr = savedValues.getString("scoreAString", "10");
+           String scoreBStr = savedValues.getString("scoreBString", "10");
+            int incrementValue = savedValues.getInt("increment", 1);
+
+
+
+            if (incrementValue == 1){
+                incrementBy.check(R.id.noRoundingRadioButton);
+                increment=1;
+            }
+            else if (incrementValue == 5) {
+                incrementBy.check(R.id.noRoundingRadioButton5);
+                increment=5;
+            }
+            else {
+                incrementBy.check(R.id.noRoundingRadioButton10);
+                increment=10;
+            }
+
+            teamA.setText(scoreAStr);
+            teamB.setText(scoreBStr);
+            scoreAString = scoreAStr;
+            scoreBString = scoreBStr;
+
+            //calculateAndDisplayA();
+            //calculateAndDisplayB();
+        }
     }
 }

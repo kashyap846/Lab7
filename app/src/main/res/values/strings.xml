@@ -8,4 +8,37 @@
     <string name="round_no1">Increment/Decrement By 1</string>
     <string name="round_no5">Increment/Decrement By 5</string>
     <string name="round_no10">Increment/Decrement By 10</string>
+
+
+    <!-- preferences-->
+    <string name="Save_Preferences_summary">Select the check box to save your preferences and values</string>
+    <string name="Save_Preferences">Save my preferences</string>
+
+    <!-- menu-->
+
+    <string name="menu_settings">Settings</string>
+    <string name="menu_about">About</string>
+
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+
 </resources>
