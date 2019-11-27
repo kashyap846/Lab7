@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
                 teamA.setText(Integer.toString(scoreA));
                 incOrDecStringA="";
             }
-
+        scoreAString = Integer.toString(scoreA);
 
     }
 
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
                 teamB.setText(Integer.toString(scoreB));
                 incOrDecStringB="";
             }
+        scoreBString = Integer.toString(scoreB);
 
     }
 
@@ -222,14 +223,21 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
     protected void onPause() {
         super.onPause();
         Editor editor = savedValues.edit();
-
+        Log.e("onPause: ", "onPause");
         rememberUserChnages= prefs.getBoolean("pref_changes_saved",true);
+        Log.e("rememberUserChnages", String.valueOf(rememberUserChnages));
         if(rememberUserChnages) {
             editor.putString("scoreAString", scoreAString);
+            Log.e("scoreAString", String.valueOf(scoreAString));
             editor.putString("scoreBString", scoreBString);
+            Log.e("scoreBString", String.valueOf(scoreBString));
             editor.putInt("increment", increment);
+            Log.e("increment", String.valueOf(increment));
+            editor.commit();
+        }else{
+            editor.clear();
         }
-        editor.commit();
+
 
 
     }
@@ -238,26 +246,37 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
     protected void onStop() {
         super.onStop();
         Editor editor = savedValues.edit();
-
+        Log.e("onStop", "onStop");
         rememberUserChnages= prefs.getBoolean("pref_changes_saved",true);
+        Log.e("rememberUserChnages", String.valueOf(rememberUserChnages));
         if(rememberUserChnages) {
             editor.putString("scoreAString", scoreAString);
+            Log.e("scoreAString", String.valueOf(scoreAString));
             editor.putString("scoreBString", scoreBString);
+            Log.e("scoreBString", String.valueOf(scoreBString));
             editor.putInt("increment", increment);
+            Log.e("increment", String.valueOf(increment));
+
+
+            editor.commit();
+        }else{
+            editor.clear();
         }
-        editor.commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.e("onResume", "onResume");
        rememberUserChnages= prefs.getBoolean("pref_changes_saved",true);
+        Log.e("rememberUserChnages", String.valueOf(rememberUserChnages));
         if(rememberUserChnages) {
             String scoreAStr = savedValues.getString("scoreAString", "10");
            String scoreBStr = savedValues.getString("scoreBString", "10");
             int incrementValue = savedValues.getInt("increment", 1);
-
+            Log.e("incrementValue", String.valueOf(incrementValue));
+            Log.e("scoreAStr", String.valueOf(scoreAStr));
+            Log.e("scoreBStr", String.valueOf(scoreBStr));
 
 
             if (incrementValue == 1){
@@ -272,14 +291,21 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
                 incrementBy.check(R.id.noRoundingRadioButton10);
                 increment=10;
             }
-
+            Log.e("increment", String.valueOf(increment));
             teamA.setText(scoreAStr);
+            Log.e("setText", "setText");
             teamB.setText(scoreBStr);
+            Log.e("setText11", "setText11");
+            Log.e("scoreAStr", String.valueOf(scoreAStr));
+            Log.e("scoreBStr", String.valueOf(scoreBStr));
             scoreAString = scoreAStr;
             scoreBString = scoreBStr;
 
-            //calculateAndDisplayA();
-            //calculateAndDisplayB();
+        }else{
+            Log.e("false", "false");
+            scoreAString="";
+            scoreBString="";
+            increment=1;
         }
     }
 }
