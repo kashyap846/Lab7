@@ -232,10 +232,11 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
             editor.putString("scoreBString", scoreBString);
             Log.e("scoreBString", String.valueOf(scoreBString));
             editor.putInt("increment", increment);
-            Log.e("increment", String.valueOf(increment));
+            Log.e(" ", String.valueOf(increment));
             editor.commit();
         }else{
-            editor.clear();
+            editor.clear().commit();
+
         }
 
 
@@ -260,7 +261,8 @@ public class MainActivity extends AppCompatActivity  implements OnEditorActionLi
 
             editor.commit();
         }else{
-            editor.clear();
+            editor.clear().commit();
+
         }
     }
 
